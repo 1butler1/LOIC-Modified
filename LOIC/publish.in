@@ -1,0 +1,33 @@
+set PATH=%PATH%;%WINDIR%\Microsoft.NET\Framework\v4.0.30319;%RARPATH%
+
+set RARCMD=A -afzip -o+ -s -ibck -t -m5
+
+set PROJECT=LOIC
+
+set SOURCES=HTTPFlooder.cs IFlooder.cs Program.cs ReqState.cs XXPFlooder.cs Properties\AssemblyInfo.cs Properties\key.snk
+set FORMS=frmMain.cs frmMain.Designer.cs frmWtf.cs frmWtf.Designer.cs
+set RESOURCES=Properties\Resources.Designer.cs Properties\Resources.resx Resources\LOIC.gif Resources\LOIC.ico Resources\WTF.jpg
+set VS_FILES=LOIC.csproj LOIC.sln
+set FILES=%SOURCES% %FORMS% %RESOURCES% %VS_FILES%
+
+set BINARY=bin\Release\LOIC.exe
+
+set MAJOR=1
+set MINOR=0
+set BUILD=6
+set REVISION=$WCREV$
+set VERSION=%MAJOR%.%MINOR%.%BUILD%.%REVISION%
+
+set DIST="..\release"
+mkdir %DIST%
+
+msbuild /nologo %PROJECT%.sln /t:Clean /p:Configuration=Release
+msbuild /nologo %PROJECT%.sln /t:Build /p:Configuration=Release
+
+set NAME=%PROJECT%-%VERSION%-source.zip
+winrar.exe %RARCMD% %NAME% %FILES%
+move /y %NAME% %DIST%
+
+set NAME=%PROJECT%-%VERSION%-binary.zip
+winrar.exe -ep %RARCMD% %NAME% %BINARY%
+move /y %NAME% %DIST%
